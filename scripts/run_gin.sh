@@ -230,9 +230,9 @@ banner "═══  Running GIN Index Experiment  ═══"
 cd "$REPO_ROOT"
 
 if [ "$PYTHON_RUN" = "uv run" ]; then
-  uv run pgindexes
+  uv run pgindexes --demo gin
 else
-  $PYTHON_RUN pgindexes
+  $PYTHON_RUN pgindexes --demo gin
 fi
 
 success "GIN experiment complete."
