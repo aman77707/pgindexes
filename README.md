@@ -206,8 +206,11 @@ See [DOCKER.md](DOCKER.md) for more Docker-specific details.
 # Run all demos (schema setup + seed + FTS + JSONB)
 uv run pgindexes
 
+# Run only the GIN demo
+uv run pgindexes --demo gin
+
 # Or equivalently
-uv run python -m pgindexes
+uv run python -m pgindexes --demo gin
 ```
 
 ---
