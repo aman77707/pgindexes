@@ -8,23 +8,33 @@ version = "0.1.0"
 description = "Postgres indexes prototypes"
 authors = [ { name = "Aman Bhardwaj" } ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 
 dependencies = [
   "python-dotenv>=0.13.0,<1",
   "psycopg2-binary>=2.9.0",
 ]
 
-[project.optional-dependencies]
-dev = [
+[project.scripts]
+pgindexes = "pgindexes.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+dev-dependencies = [
   "pytest>=7.0",
-  "black>=23.1",
-  "isort>=5.10",
+  "ruff>=0.4",
   "mypy>=0.991",
 ]
 
-[tool.black]
+[tool.ruff]
 line-length = 88
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # pycodestyle errors, Pyflakes, isort
+ignore = ["E501"]          # line length is enforced by ruff format, not the linter
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
