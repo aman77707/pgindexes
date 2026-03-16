@@ -200,7 +200,7 @@ See [DOCKER.md](DOCKER.md) for more Docker-specific details.
 
 ---
 
-## Running the demos
+## To run all the demos 
 
 ```bash
 # Run all demos (schema setup + seed + FTS + JSONB)
@@ -210,9 +210,38 @@ uv run pgindexes
 uv run python -m pgindexes
 ```
 
-The script will:
-1. Drop and recreate the demo tables with GIN indexes.
-2. Seed 10 articles and 10 products.
-3. Run the full-text search demo, printing matched titles, ranks, and headlines.
-4. Run the JSONB demo, printing containment and key-existence query results.
-5. Print `EXPLAIN` output for each demo to confirm the GIN index is hit.
+---
+
+## Convenience shell scripts for individual demos
+
+The `scripts/` folder contains one-shot shell scripts that handle the full
+lifecycle (start DB → run demo → optionally clean up) in a single command.
+They work on **macOS, Linux (all distros), WSL, and Windows Git Bash**.
+
+### `scripts/run_gin.sh` — GIN index experiment
+
+```bash
+# Start DB, run the GIN demo, leave the DB running afterwards
+bash scripts/run_gin.sh
+
+# Start DB, run the GIN demo, then stop & remove the DB container
+bash scripts/run_gin.sh --clean
+
+# Only stop & remove the DB container (no demo run)
+bash scripts/run_gin.sh --down
+```
+
+What the script does automatically:
+
+| Step | Detail |
+|---|---|
+| Detects OS / shell | macOS · Linux · WSL · Windows Git Bash |
+| Checks dependencies | `docker`, `docker compose` / `docker-compose`, `uv` (falls back to `python3`) |
+| Starts the DB | `docker compose up -d db` |
+| Waits for ready | Polls `pg_isready` (up to 60 s) before proceeding |
+| Runs the demo | `uv run pgindexes` (or `python3 -m pgindexes` if uv is absent) |
+| Cleans up | Only when `--clean` is passed — otherwise the container keeps running |
+
+> **Adding more experiments:** Future scripts follow the same naming pattern —
+> `scripts/run_brin.sh`, `scripts/run_hash.sh`, `scripts/run_btree.sh`, etc.
+> Each script is self-contained so you can run any single experiment in isolation.
